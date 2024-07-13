@@ -1,0 +1,47 @@
+version: "3.6"
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=DB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      default:
+        aliases:
+          - postgres
+
+  localstack:
+    image: localstack/localstack:3.4.0
+    ports:
+    - "4566:4566"
+    environment:
+      - SERVICES=s3:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DEFAULT_REGION=us-east-1
+    networks:
+      default:
+        aliases:
+          - localstack
+
+  aws-cli:
+    image: amazon/aws-cli
+    depends_on:
+      - localstack
+    volumes:
+      - ./testbucket:/aws
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        aws --endpoint-url=http://localstack:4566 s3api create-bucket --bucket product-logos --region us-east-1
+        aws --endpoint-url=http://localstack:4566 s3api list-buckets --region us-east-1
+      "

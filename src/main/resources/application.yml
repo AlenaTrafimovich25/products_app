@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: prod
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/DB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      platform: postgres
+      mode: always
+      continue-on-error: false
+
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          lob:
+            non_contextual_creation: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:changelog.xml
+
+  security:
+    public-urls: v1/auth/**, /actuator/**, /swagger-ui/**, /v3/api-docs/**
+    private-urls: v1/products/**, v1/products, v1/categories, v1/categories/**
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY:3X4Y5Z6A7B8C9D0E1F2G3H4I5J6K7L8M9N0PQ1RST2UV3WX4YZ5A6BC7DE8FG9HI0JK1LM2NO3PQ4RS}
+  expiration: ${JWT_EXPIRATION:3600000}
+
+amazon:
+  aws:
+    accesskey: ${AWS_ACCESS_KEY}
+    secretkey: ${AWS_SECRET_KEY}
+    region: ${AWS_REGION:eu-north-1}
+    bucketName: alena-product-logos
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+  swagger-ui:
+    path: /swagger-ui

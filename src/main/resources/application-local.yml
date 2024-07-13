@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+amazon:
+  aws:
+    accesskey: ${AWS_ACCESS_KEY:test}
+    secretkey: ${AWS_SECRET_KEY:test}
+    region: ${AWS_REGION:us-east-1}
+    bucketName: product-logos
+    endpoint: http://s3.localhost.localstack.cloud:4566
