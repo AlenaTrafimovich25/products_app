@@ -8,19 +8,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserAuthDetails implements UserDetails {
-
-  private final String email;
-  private final String password;
-  private final List<SimpleGrantedAuthority> authorities;
+public record UserAuthDetails(String email, String password,
+                              List<SimpleGrantedAuthority> authorities)
+    implements UserDetails {
 
   public UserAuthDetails(User user) {
-    this.email = user.getEmail();
-    this.password = user.getPassword();
-    this.authorities = user.getRoles().stream()
-        .map(Role::name)
-        .map(SimpleGrantedAuthority::new)
-        .toList();
+    this(user.getEmail(),
+        user.getPassword(),
+        user.getRoles().stream()
+            .map(Role::name)
+            .map(SimpleGrantedAuthority::new)
+            .toList());
   }
 
   @Override
