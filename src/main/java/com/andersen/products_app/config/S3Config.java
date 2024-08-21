@@ -22,7 +22,7 @@ public class S3Config {
   @Value("${amazon.aws.region}")
   private String region;
 
-  @Bean
+  @Bean("s3Client")
   @ConditionalOnProperty(name = "amazon.aws.endpoint")
   public S3Client localS3Client(@Value("${amazon.aws.endpoint}") String endpoint) {
     return S3Client.builder()
@@ -33,7 +33,7 @@ public class S3Config {
         .build();
   }
 
-  @Bean
+  @Bean("s3Client")
   @ConditionalOnProperty(name = "amazon.aws.endpoint", matchIfMissing = true)
   public S3Client remoteS3Client() {
     return S3Client.builder()
