@@ -44,10 +44,10 @@ public class JwtService {
     }
   }
 
-  private String createToken(Map<String, Object> claims, String userName) {
+  private String createToken(Map<String, Object> claims, String email) {
     return Jwts.builder()
         .setClaims(claims)
-        .setSubject(userName)
+        .setSubject(email)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
         .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
