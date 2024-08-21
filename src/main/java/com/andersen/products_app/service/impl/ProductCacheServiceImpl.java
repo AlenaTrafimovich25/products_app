@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class ProductCacheServiceImpl implements ProductCacheService {
   }
 
   @PostConstruct
+  @Scheduled(cron = "${scheduler.cache.period}")
   public void loadCache() {
     this.products = repository.findAll().stream()
         .collect(Collectors.toConcurrentMap(Product::getId, Function.identity()));
