@@ -7,7 +7,7 @@ import com.andersen.products_app.model.response.LoginResponse;
 
 public interface AuthService {
 
-  LoginResponse loginUser(LoginRequest loginRequest);
-
   void registerUser(RegisterUserRequest registerUserRequest);
+
+  LoginResponse loginUser(LoginRequest loginRequest);
 }

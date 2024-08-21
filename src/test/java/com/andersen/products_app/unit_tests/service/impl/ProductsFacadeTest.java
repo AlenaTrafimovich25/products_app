@@ -166,7 +166,6 @@ class ProductsFacadeTest {
     productsFacade.updateProduct(PRODUCT_ID, productUpdateRequest, multipartFile);
 
     verify(productService).getProduct(PRODUCT_ID);
-    verify(s3service).deleteFile("previousLogo");
     verify(s3service).putS3Object(any(), refEq(multipartFile));
     verify(productService).saveProduct(productEntityArgumentCaptor.capture());
     assertEquals(expectedProductEntity.getName(), productEntityArgumentCaptor.getValue().getName());
@@ -178,24 +177,20 @@ class ProductsFacadeTest {
     when(categoryService.getCategory(any())).thenReturn(category);
 
     var productCreationRequest = new ProductCreationRequest(CATEGORY_ID, PRODUCT_NAME);
+    when(productService.saveProduct(any())).thenReturn(product);
     when(s3service.putS3Object(any(), any())).thenReturn(LOGO);
 
-    var expectedProductEntity = new Product();
-    expectedProductEntity.setName(PRODUCT_NAME);
-    expectedProductEntity.setLogo(LOGO);
-    expectedProductEntity.setCategory(category);
+    var expectedProductResponse =
+        new ProductResponse(PRODUCT_ID, PRODUCT_NAME, LOGO, CATEGORY_NAME);
 
-    productsFacade.createProduct(productCreationRequest, multipartFile);
+    var actualProductResponse = productsFacade.createProduct(productCreationRequest, multipartFile);
 
     verify(categoryService).getCategory(CATEGORY_ID);
     verify(s3service).putS3Object(any(), refEq(multipartFile));
     verify(productMapper).toProductEntity(productCreationRequest, LOGO, category);
-    verify(productService).saveProduct(productEntityArgumentCaptor.capture());
-    var productCaptureValue = productEntityArgumentCaptor.getValue();
-    assertEquals(expectedProductEntity.getLogo(), productCaptureValue.getLogo());
-    assertEquals(expectedProductEntity.getName(), productCaptureValue.getName());
-    assertEquals(expectedProductEntity.getCategory().getId(),
-        productCaptureValue.getCategory().getId());
+    verify(productMapper).toProductResponse(product);
+    verify(productService).saveProduct(refEq(product, "productId"));
+    assertEquals(expectedProductResponse, actualProductResponse);
   }
 
   @Test
@@ -238,11 +233,13 @@ class ProductsFacadeTest {
   @Test
   void whenCreateCategory_theCategoryAdded() {
     var categoryCreationRequest = new CategoryCreationRequest(CATEGORY_NAME);
+    when(categoryService.saveCategory(any())).thenReturn(category);
 
-    productsFacade.createCategory(categoryCreationRequest);
+    var actualCategoryResponse = productsFacade.createCategory(categoryCreationRequest);
 
     verify(categoryMapper).toCategoryEntity(categoryCreationRequest);
-    verify(categoryService).saveCategory(refEq(category, "id", "products"));
+    verify(categoryMapper).toCategoryResponse(category);
+    assertEquals(CATEGORY_NAME, actualCategoryResponse.name());
   }
 
   @Test

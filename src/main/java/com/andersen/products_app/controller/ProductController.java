@@ -40,6 +40,7 @@ public class ProductController {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @SecurityRequirement(name = "bearerAuth")
   public Page<ProductResponse> getProducts(
       @RequestParam(required = false) Set<String> categories,
@@ -54,6 +55,7 @@ public class ProductController {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @ApiResponse(responseCode = "404", description = "NOT_FOUND")
   @SecurityRequirement(name = "bearerAuth")
   public ProductResponse getProductById(
@@ -65,6 +67,7 @@ public class ProductController {
   @ResponseStatus(HttpStatus.OK)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @SecurityRequirement(name = "bearerAuth")
   public Page<String> getProductNames(
       @RequestParam(defaultValue = "0") int page,
@@ -80,6 +83,7 @@ public class ProductController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @ApiResponse(responseCode = "404", description = "NOT_FOUND")
   @SecurityRequirement(name = "bearerAuth")
   public void updateProduct(
@@ -94,18 +98,20 @@ public class ProductController {
       MediaType.APPLICATION_JSON_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
   @ApiResponse(responseCode = "200", description = "OK")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
   @SecurityRequirement(name = "bearerAuth")
-  public void addProduct(
+  public ProductResponse addProduct(
       @RequestPart @Valid ProductCreationRequest productCreationRequest,
       @RequestPart @NotNull MultipartFile file) {
-    productsFacade.createProduct(productCreationRequest, file);
+    return productsFacade.createProduct(productCreationRequest, file);
   }
 
   @DeleteMapping("/{productId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @ApiResponse(responseCode = "404", description = "NOT_FOUND")
   @SecurityRequirement(name = "bearerAuth")
   public void deleteProduct(@PathVariable Long productId) {

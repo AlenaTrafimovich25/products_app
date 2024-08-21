@@ -56,16 +56,18 @@ public class CategoryController {
   @ResponseStatus(HttpStatus.CREATED)
   @ApiResponse(responseCode = "200", description = "OK")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @SecurityRequirement(name = "bearerAuth")
-  public void addCategory(
+  public CategoryResponse addCategory(
       @RequestBody @Valid CategoryCreationRequest categoryCreationRequest) {
-    productsFacade.createCategory(categoryCreationRequest);
+    return productsFacade.createCategory(categoryCreationRequest);
   }
 
   @DeleteMapping("/{categoryId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ApiResponse(responseCode = "204", description = "NO_CONTENT")
   @ApiResponse(responseCode = "400", description = "BAD REQUEST")
+  @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")
   @SecurityRequirement(name = "bearerAuth")
   public void deleteCategory(
       @PathVariable Long categoryId) {

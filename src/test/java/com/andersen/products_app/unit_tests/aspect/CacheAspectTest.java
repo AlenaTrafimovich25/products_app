@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import com.andersen.products_app.aspect.CacheAspect;
 import com.andersen.products_app.entity.Category;
 import com.andersen.products_app.entity.Product;
-import com.andersen.products_app.service.impl.CacheServiceImpl;
+import com.andersen.products_app.service.impl.ProductCacheServiceImpl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +40,7 @@ class CacheAspectTest {
   @InjectMocks
   private CacheAspect cacheAspect;
   @Mock
-  private CacheServiceImpl productCache;
+  private ProductCacheServiceImpl productCache;
 
   private Product product1;
   private Product product2;

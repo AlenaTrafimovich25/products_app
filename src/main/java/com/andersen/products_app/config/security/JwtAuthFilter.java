@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+  private static final String BEARER_TOKEN_PREFIX = "Bearer ";
   private final JwtService jwtService;
   private final UserDetailsService userDetailsService;
 
@@ -33,8 +34,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String token = null;
     String email = null;
     if (!StringUtils.isEmpty(authHeader)
-        && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
+        && authHeader.startsWith(BEARER_TOKEN_PREFIX)) {
+      token = authHeader.replaceFirst(BEARER_TOKEN_PREFIX, "");
       email = jwtService.extractEmail(token);
     }
 

@@ -41,7 +41,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+  AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration)
       throws Exception {
     return authenticationConfiguration.getAuthenticationManager();
   }
@@ -56,8 +57,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                 JwtAuthFilter jwtAuthFilter)
+  SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                          JwtAuthFilter jwtAuthFilter)
       throws Exception {
     return http
         .httpBasic(Customizer.withDefaults())

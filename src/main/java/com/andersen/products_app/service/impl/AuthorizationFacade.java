@@ -30,13 +30,6 @@ public class AuthorizationFacade implements AuthService {
   }
 
   @Override
-  public LoginResponse loginUser(LoginRequest loginRequest) {
-    var authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
-    return new LoginResponse(jwtService.generateToken(authentication.getName()));
-  }
-
-  @Override
   public void registerUser(RegisterUserRequest registerUserRequest) {
     if (userDetailsService.existsUser(registerUserRequest.email())) {
       throw new UserAlreadyExistsException(registerUserRequest.email());
@@ -45,5 +38,12 @@ public class AuthorizationFacade implements AuthService {
     var userEntity = userMapper.toUser(registerUserRequest);
     userEntity.addRole(USER);
     userDetailsService.createUser(userEntity);
+  }
+
+  @Override
+  public LoginResponse loginUser(LoginRequest loginRequest) {
+    var authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
+    return new LoginResponse(jwtService.generateToken(authentication.getName()));
   }
 }

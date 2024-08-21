@@ -13,6 +13,6 @@ public class Constants {
   public static final Integer PAGE_NUMBER = 1;
   public static final Integer PAGE_SIZE = 2;
   public static final String FILE_NAME = "FILE_NAME";
-  public  static final String AWS_BUCKET_NAME = "bucket";
-  public  static final String FILE_CONTENT = "Hello, S3!";
+  public static final String AWS_BUCKET_NAME = "bucket";
+  public static final String FILE_CONTENT = "Hello, S3!";
 }

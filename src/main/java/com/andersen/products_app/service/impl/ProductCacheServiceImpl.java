@@ -1,7 +1,7 @@
 package com.andersen.products_app.service.impl;
 
 import com.andersen.products_app.entity.Product;
-import com.andersen.products_app.service.CacheService;
+import com.andersen.products_app.service.ProductCacheService;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +13,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CacheServiceImpl implements CacheService {
+public class ProductCacheServiceImpl implements ProductCacheService {
   private final JpaRepository<Product, Long> repository;
   private Map<Long, Product> products = new ConcurrentHashMap<>();
 
-  public CacheServiceImpl(JpaRepository<Product, Long> repository) {
+  public ProductCacheServiceImpl(JpaRepository<Product, Long> repository) {
     this.repository = repository;
   }
 

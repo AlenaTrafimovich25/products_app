@@ -4,7 +4,7 @@ import com.andersen.products_app.entity.Product;
 import java.util.List;
 import java.util.Optional;
 
-public interface CacheService {
+public interface ProductCacheService {
 
   void put(Product product);
 

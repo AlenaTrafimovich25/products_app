@@ -75,19 +75,20 @@ public class ProductsFacade {
     }
 
     if (file != null && !file.isEmpty()) {
-      s3service.deleteFile(product.getLogo());
-      var url = s3service.putS3Object(UUID.randomUUID().toString(), file);
+      var key = product.getLogo().replaceAll(".+/", "");
+      var url = s3service.putS3Object(key, file);
       product.setLogo(url);
     }
     productService.saveProduct(product);
   }
 
   @Transactional
-  public void createProduct(ProductCreationRequest productCreationRequest, MultipartFile file) {
+  public ProductResponse createProduct(ProductCreationRequest productCreationRequest,
+                                       MultipartFile file) {
     var category = categoryService.getCategory(productCreationRequest.categoryId());
     var logo = s3service.putS3Object(UUID.randomUUID().toString(), file);
     var product = productMapper.toProductEntity(productCreationRequest, logo, category);
-    productService.saveProduct(product);
+    return productMapper.toProductResponse(productService.saveProduct(product));
   }
 
   @Transactional
@@ -114,8 +115,10 @@ public class ProductsFacade {
         .map(categoryMapper::toCategoryResponse);
   }
 
-  public void createCategory(CategoryCreationRequest categoryCreationRequest) {
-    categoryService.saveCategory(categoryMapper.toCategoryEntity(categoryCreationRequest));
+  public CategoryResponse createCategory(CategoryCreationRequest categoryCreationRequest) {
+    var category =
+        categoryService.saveCategory(categoryMapper.toCategoryEntity(categoryCreationRequest));
+    return categoryMapper.toCategoryResponse(category);
   }
 
   @Transactional

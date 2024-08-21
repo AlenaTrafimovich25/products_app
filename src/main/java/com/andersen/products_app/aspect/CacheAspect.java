@@ -1,7 +1,7 @@
 package com.andersen.products_app.aspect;
 
 import com.andersen.products_app.entity.Product;
-import com.andersen.products_app.service.CacheService;
+import com.andersen.products_app.service.ProductCacheService;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class CacheAspect {
-  private final CacheService cacheService;
+  private final ProductCacheService productCacheService;
 
-  public CacheAspect(CacheService cacheService) {
-    this.cacheService = cacheService;
+  public CacheAspect(ProductCacheService productCacheService) {
+    this.productCacheService = productCacheService;
   }
 
   @Around(
@@ -30,7 +30,7 @@ public class CacheAspect {
           """)
   public Object getProducts(ProceedingJoinPoint joinPoint) {
     var pageable = (Pageable) joinPoint.getArgs()[0];
-    return getPage(cacheService.getAll(), pageable);
+    return getPage(productCacheService.getAll(), pageable);
   }
 
   @Around(
@@ -41,7 +41,7 @@ public class CacheAspect {
   public Object getProductsByCategoriesName(ProceedingJoinPoint joinPoint) {
     Set<String> categories = (Set<String>) joinPoint.getArgs()[0];
     var pageable = (Pageable) joinPoint.getArgs()[1];
-    List<Product> products = cacheService.getAll()
+    List<Product> products = productCacheService.getAll()
         .stream()
         .filter(categoryFilter(categories))
         .toList();
@@ -57,7 +57,7 @@ public class CacheAspect {
   public Object getProductsByProductName(ProceedingJoinPoint joinPoint) {
     var productName = (String) joinPoint.getArgs()[0];
     var pageable = (Pageable) joinPoint.getArgs()[1];
-    List<Product> products = cacheService.getAll()
+    List<Product> products = productCacheService.getAll()
         .stream()
         .filter(productNameFilter(productName))
         .toList();
@@ -68,13 +68,13 @@ public class CacheAspect {
   @Around(value = "execution(* com.andersen.products_app.repository.ProductRepository.findById(..))")
   public Object getProductById(ProceedingJoinPoint joinPoint) {
     var entityId = (Long) joinPoint.getArgs()[0];
-    return cacheService.get(entityId);
+    return productCacheService.get(entityId);
   }
 
   @Around(value = "execution(* com.andersen.products_app.repository.ProductRepository.findDistinctNames(..)) ")
   public Object getProductsNames(ProceedingJoinPoint joinPoint) {
     var pageable = (Pageable) joinPoint.getArgs()[0];
-    List<String> names = cacheService.getAll()
+    List<String> names = productCacheService.getAll()
         .stream()
         .map(Product::getName)
         .distinct()
@@ -85,14 +85,14 @@ public class CacheAspect {
   @Around(value = "execution(* com.andersen.products_app.repository.ProductRepository.save(..))")
   public Object saveProduct(ProceedingJoinPoint joinPoint) throws Throwable {
     var productEntity = (Product) joinPoint.proceed();
-    cacheService.put(productEntity);
+    productCacheService.put(productEntity);
     return productEntity;
   }
 
   @Around(value = "execution(* com.andersen.products_app.repository.ProductRepository.delete(..))")
   public Object deleteProduct(ProceedingJoinPoint joinPoint) throws Throwable {
     var productEntity = (Product) joinPoint.proceed();
-    cacheService.evict(productEntity);
+    productCacheService.evict(productEntity);
     return productEntity;
   }
 
