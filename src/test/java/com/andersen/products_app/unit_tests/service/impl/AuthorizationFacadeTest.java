@@ -72,11 +72,11 @@ class AuthorizationFacadeTest {
   @Test
   void whenRegisterUser_thenSuccess() {
     when(userDetailsService.existsUser(EMAIL)).thenReturn(false);
-    when(userMapper.toUserEntity(registerUserRequest)).thenReturn(new User());
+    when(userMapper.toUser(registerUserRequest)).thenReturn(new User());
 
     authService.registerUser(registerUserRequest);
 
-    verify(userDetailsService).addUser(any(User.class));
+    verify(userDetailsService).createUser(any(User.class));
   }
 
   @Test
@@ -86,6 +86,6 @@ class AuthorizationFacadeTest {
     assertThrows(UserAlreadyExistsException.class,
         () -> authService.registerUser(registerUserRequest));
 
-    verify(userDetailsService, times(0)).addUser(any());
+    verify(userDetailsService, times(0)).createUser(any());
   }
 }

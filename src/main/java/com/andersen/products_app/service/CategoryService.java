@@ -13,6 +13,4 @@ public interface CategoryService {
   void saveCategory(Category category);
 
   void deleteCategory(Long categoryId);
-
-  boolean existsCategory(Long categoryId);
 }

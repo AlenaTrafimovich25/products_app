@@ -42,8 +42,8 @@ public class AuthorizationFacade implements AuthService {
       throw new UserAlreadyExistsException(registerUserRequest.email());
     }
 
-    var userEntity = userMapper.toUserEntity(registerUserRequest);
+    var userEntity = userMapper.toUser(registerUserRequest);
     userEntity.addRole(USER);
-    userDetailsService.addUser(userEntity);
+    userDetailsService.createUser(userEntity);
   }
 }

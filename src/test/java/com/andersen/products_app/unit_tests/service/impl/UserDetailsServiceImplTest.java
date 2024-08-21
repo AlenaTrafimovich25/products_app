@@ -53,11 +53,11 @@ class UserDetailsServiceImplTest {
   }
 
   @Test
-  void whenAddUser_thenSuccess() {
+  void whenCreateUser_thenSuccess() {
     var userEntity = new User();
     userEntity.setPassword(PASSWORD);
 
-    userDetailsService.addUser(userEntity);
+    userDetailsService.createUser(userEntity);
 
     verify(userRepository).save(userEntity);
   }

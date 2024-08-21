@@ -1,6 +1,5 @@
 package com.andersen.products_app.service.impl;
 
-import com.andersen.products_app.exception.CategoryNotFoundException;
 import com.andersen.products_app.mapper.CategoryMapper;
 import com.andersen.products_app.mapper.ProductMapper;
 import com.andersen.products_app.model.request.CategoryCreationRequest;
@@ -83,20 +82,19 @@ public class ProductsFacade {
     productService.saveProduct(product);
   }
 
+  @Transactional
   public void createProduct(ProductCreationRequest productCreationRequest, MultipartFile file) {
-    if (!categoryService.existsCategory(productCreationRequest.categoryId())) {
-      throw new CategoryNotFoundException(productCreationRequest.categoryId());
-    }
+    var category = categoryService.getCategory(productCreationRequest.categoryId());
     var logo = s3service.putS3Object(UUID.randomUUID().toString(), file);
-    var product = productMapper.toProductEntity(productCreationRequest, logo);
+    var product = productMapper.toProductEntity(productCreationRequest, logo, category);
     productService.saveProduct(product);
   }
 
   @Transactional
   public void deleteProduct(Long productId) {
     var product = productService.getProduct(productId);
-    productService.deleteProduct(product);
     s3service.deleteFile(product.getLogo());
+    productService.deleteProduct(product);
   }
 
   public CategoryResponse getCategory(Long categoryId, Pageable pageable) {

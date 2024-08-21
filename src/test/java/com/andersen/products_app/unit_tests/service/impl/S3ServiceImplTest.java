@@ -49,7 +49,7 @@ class S3ServiceImplTest {
 
   @Test
   void whenPutContent_thenSuccess() throws IOException {
-    when(multipartFile.getBytes()).thenReturn("test-content".getBytes());
+    when(multipartFile.getBytes()).thenReturn("test-content" .getBytes());
     when(s3Utilities.getUrl(any(GetUrlRequest.class))).thenReturn
         (URI.create("http://test-bucket.s3.amazonaws.com/test-key").toURL());
     when(s3Client.utilities()).thenReturn(s3Utilities);
@@ -67,7 +67,7 @@ class S3ServiceImplTest {
         .key(FILE_NAME)
         .build();
 
-    when(multipartFile.getBytes()).thenReturn("test-content".getBytes());
+    when(multipartFile.getBytes()).thenReturn("test-content" .getBytes());
     when(s3Client.putObject(any(PutObjectRequest.class), any(RequestBody.class))).thenThrow(
         S3Exception.class);
 

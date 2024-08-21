@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         .orElseThrow(() -> new EmailNotFoundException(email));
   }
 
-  public void addUser(User user) {
+  public void createUser(User user) {
     userRepository.save(user);
   }
 

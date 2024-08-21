@@ -9,16 +9,13 @@ import static com.andersen.utils.Constants.PAGE_SIZE;
 import static com.andersen.utils.Constants.PRODUCT_ID;
 import static com.andersen.utils.Constants.PRODUCT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.andersen.products_app.entity.Category;
 import com.andersen.products_app.entity.Product;
-import com.andersen.products_app.exception.CategoryNotFoundException;
 import com.andersen.products_app.mapper.CategoryMapper;
 import com.andersen.products_app.mapper.CategoryMapperImpl;
 import com.andersen.products_app.mapper.ProductMapper;
@@ -178,7 +175,7 @@ class ProductsFacadeTest {
 
   @Test
   void whenCreateProduct_theProductAdded() {
-    when(categoryService.existsCategory(any())).thenReturn(true);
+    when(categoryService.getCategory(any())).thenReturn(category);
 
     var productCreationRequest = new ProductCreationRequest(CATEGORY_ID, PRODUCT_NAME);
     when(s3service.putS3Object(any(), any())).thenReturn(LOGO);
@@ -190,30 +187,15 @@ class ProductsFacadeTest {
 
     productsFacade.createProduct(productCreationRequest, multipartFile);
 
-    verify(categoryService).existsCategory(CATEGORY_ID);
+    verify(categoryService).getCategory(CATEGORY_ID);
     verify(s3service).putS3Object(any(), refEq(multipartFile));
-    verify(productMapper).toProductEntity(productCreationRequest, LOGO);
+    verify(productMapper).toProductEntity(productCreationRequest, LOGO, category);
     verify(productService).saveProduct(productEntityArgumentCaptor.capture());
     var productCaptureValue = productEntityArgumentCaptor.getValue();
     assertEquals(expectedProductEntity.getLogo(), productCaptureValue.getLogo());
     assertEquals(expectedProductEntity.getName(), productCaptureValue.getName());
     assertEquals(expectedProductEntity.getCategory().getId(),
         productCaptureValue.getCategory().getId());
-  }
-
-  @Test
-  void whenCreateProduct_theCategoryNotFound() {
-    when(categoryService.existsCategory(any())).thenReturn(false);
-
-    var productCreationRequest = new ProductCreationRequest(CATEGORY_ID, PRODUCT_NAME);
-
-    assertThrows(CategoryNotFoundException.class,
-        () -> productsFacade.createProduct(productCreationRequest, multipartFile));
-
-    verify(categoryService).existsCategory(CATEGORY_ID);
-    verify(s3service, never()).putS3Object(any(), any());
-    verify(productMapper, never()).toProductEntity(any(), any());
-    verify(productService, never()).saveProduct(any());
   }
 
   @Test

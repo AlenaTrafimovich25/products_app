@@ -90,13 +90,4 @@ class CategoryServiceImplTest {
 
     verify(categoryRepository).deleteById(CATEGORY_ID);
   }
-
-  @Test
-  void whenExistsCategory_thenReturnTrue() {
-    when(categoryRepository.existsById(any())).thenReturn(true);
-
-    categoryService.existsCategory(CATEGORY_ID);
-
-    verify(categoryRepository).existsById(CATEGORY_ID);
-  }
 }
