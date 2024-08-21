@@ -13,16 +13,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthorizationFacade implements AuthService {
+public class AuthServiceImpl implements AuthService {
   private final JwtService jwtService;
   private final UserMapper userMapper;
   private final UserDetailsServiceImpl userDetailsService;
   private final AuthenticationManager authenticationManager;
 
-  public AuthorizationFacade(JwtService jwtService,
-                             UserMapper userMapper,
-                             UserDetailsServiceImpl userDetailsService,
-                             AuthenticationManager authenticationManager) {
+  public AuthServiceImpl(JwtService jwtService,
+                         UserMapper userMapper,
+                         UserDetailsServiceImpl userDetailsService,
+                         AuthenticationManager authenticationManager) {
     this.jwtService = jwtService;
     this.userMapper = userMapper;
     this.userDetailsService = userDetailsService;

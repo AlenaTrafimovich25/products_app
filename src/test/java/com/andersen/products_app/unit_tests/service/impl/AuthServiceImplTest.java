@@ -17,7 +17,7 @@ import com.andersen.products_app.mapper.UserMapperImpl;
 import com.andersen.products_app.model.request.LoginRequest;
 import com.andersen.products_app.model.request.RegisterUserRequest;
 import com.andersen.products_app.repository.UserRepository;
-import com.andersen.products_app.service.impl.AuthorizationFacade;
+import com.andersen.products_app.service.impl.AuthServiceImpl;
 import com.andersen.products_app.service.impl.JwtService;
 import com.andersen.products_app.service.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorizationFacadeTest {
+class AuthServiceImplTest {
 
   @Mock
   private JwtService jwtService;
@@ -49,7 +49,7 @@ class AuthorizationFacadeTest {
   private AuthenticationManager authenticationManager;
 
   @InjectMocks
-  private AuthorizationFacade authService;
+  private AuthServiceImpl authService;
 
   @Mock
   private Authentication authentication;
